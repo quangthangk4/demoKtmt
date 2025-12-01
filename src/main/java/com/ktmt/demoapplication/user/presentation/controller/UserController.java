@@ -1,8 +1,14 @@
 package com.ktmt.demoapplication.user.presentation.controller;
 
 import com.ktmt.demoapplication.user.application.dto.UserResponse;
-import com.ktmt.demoapplication.user.application.usecase.*;
-import com.ktmt.demoapplication.user.presentation.dto.*;
+import com.ktmt.demoapplication.user.application.usecase.CreateUserUseCase;
+import com.ktmt.demoapplication.user.application.usecase.DeleteUserUseCase;
+import com.ktmt.demoapplication.user.application.usecase.GetUserUseCase;
+import com.ktmt.demoapplication.user.application.usecase.UpdateUserUseCase;
+import com.ktmt.demoapplication.user.presentation.dto.ApiResponseData;
+import com.ktmt.demoapplication.user.presentation.dto.CreateUserApiRequest;
+import com.ktmt.demoapplication.user.presentation.dto.UpdateUserApiRequest;
+import com.ktmt.demoapplication.user.presentation.dto.UserApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,7 +19,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -55,13 +69,13 @@ public class UserController {
         @ApiResponse(responseCode = "409", description = "Email already exists")
     })
     @PostMapping
-    public ResponseEntity<com.ktmt.demoapplication.user.presentation.dto.ApiResponse<UserApiResponse>> createUser(
+    public ResponseEntity<ApiResponseData<UserApiResponse>> createUser(
             @Valid @RequestBody CreateUserApiRequest request) {
         UserResponse response = createUserUseCase.execute(request.toApplicationDto());
         UserApiResponse apiResponse = UserApiResponse.from(response);
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(com.ktmt.demoapplication.user.presentation.dto.ApiResponse.success("User created successfully", apiResponse));
+            .body(ApiResponseData.success("User created successfully", apiResponse));
     }
 
     @Operation(summary = "Get user by ID", description = "Retrieves a user by their unique identifier")
@@ -72,11 +86,11 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "User not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<com.ktmt.demoapplication.user.presentation.dto.ApiResponse<UserApiResponse>> getUserById(
+    public ResponseEntity<ApiResponseData<UserApiResponse>> getUserById(
             @Parameter(description = "User ID (UUID format)", required = true) @PathVariable String id) {
         UserResponse response = getUserUseCase.getById(id);
         UserApiResponse apiResponse = UserApiResponse.from(response);
-        return ResponseEntity.ok(com.ktmt.demoapplication.user.presentation.dto.ApiResponse.success(apiResponse));
+        return ResponseEntity.ok(ApiResponseData.success(apiResponse));
     }
 
     @Operation(summary = "Get all users", description = "Retrieves a list of all users, optionally filtered by active status")
@@ -84,7 +98,7 @@ public class UserController {
         @ApiResponse(responseCode = "200", description = "List of users retrieved successfully")
     })
     @GetMapping
-    public ResponseEntity<com.ktmt.demoapplication.user.presentation.dto.ApiResponse<List<UserApiResponse>>> getAllUsers(
+    public ResponseEntity<ApiResponseData<List<UserApiResponse>>> getAllUsers(
             @Parameter(description = "Filter by active status (true/false)")
             @RequestParam(value = "active", required = false) Boolean active) {
         List<UserResponse> responses = active != null && active
@@ -95,7 +109,7 @@ public class UserController {
             .map(UserApiResponse::from)
             .toList();
 
-        return ResponseEntity.ok(com.ktmt.demoapplication.user.presentation.dto.ApiResponse.success(apiResponses));
+        return ResponseEntity.ok(ApiResponseData.success(apiResponses));
     }
 
     @Operation(summary = "Update user", description = "Updates an existing user's information")
@@ -107,12 +121,12 @@ public class UserController {
         @ApiResponse(responseCode = "409", description = "Email already exists")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<com.ktmt.demoapplication.user.presentation.dto.ApiResponse<UserApiResponse>> updateUser(
+    public ResponseEntity<ApiResponseData<UserApiResponse>> updateUser(
             @Parameter(description = "User ID (UUID format)", required = true) @PathVariable String id,
             @Valid @RequestBody UpdateUserApiRequest request) {
         UserResponse response = updateUserUseCase.execute(id, request.toApplicationDto());
         UserApiResponse apiResponse = UserApiResponse.from(response);
-        return ResponseEntity.ok(com.ktmt.demoapplication.user.presentation.dto.ApiResponse.success("User updated successfully", apiResponse));
+        return ResponseEntity.ok(ApiResponseData.success("User updated successfully", apiResponse));
     }
 
     @Operation(summary = "Soft delete user", description = "Deactivates a user without permanently removing their data")
@@ -122,10 +136,10 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "User not found")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<com.ktmt.demoapplication.user.presentation.dto.ApiResponse<Void>> deleteUser(
+    public ResponseEntity<ApiResponseData<Void>> deleteUser(
             @Parameter(description = "User ID (UUID format)", required = true) @PathVariable String id) {
         deleteUserUseCase.softDelete(id);
-        return ResponseEntity.ok(com.ktmt.demoapplication.user.presentation.dto.ApiResponse.success("User deleted successfully", null));
+        return ResponseEntity.ok(ApiResponseData.success("User deleted successfully", null));
     }
 
     @Operation(summary = "Hard delete user", description = "Permanently removes a user from the system")
@@ -135,9 +149,9 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "User not found")
     })
     @DeleteMapping("/{id}/permanent")
-    public ResponseEntity<com.ktmt.demoapplication.user.presentation.dto.ApiResponse<Void>> permanentlyDeleteUser(
+    public ResponseEntity<ApiResponseData<Void>> permanentlyDeleteUser(
             @Parameter(description = "User ID (UUID format)", required = true) @PathVariable String id) {
         deleteUserUseCase.hardDelete(id);
-        return ResponseEntity.ok(com.ktmt.demoapplication.user.presentation.dto.ApiResponse.success("User permanently deleted", null));
+        return ResponseEntity.ok(ApiResponseData.success("User permanently deleted", null));
     }
 }
