@@ -31,3 +31,24 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Docker ###
+.env
+
+### Database ###
+*.db
+*.sqlite
+*.sqlite3
+
+### Logs ###
+*.log
+logs/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Backup files ###
+*.bak
+*.swp
+*~
