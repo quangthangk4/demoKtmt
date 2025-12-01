@@ -83,7 +83,6 @@ docker-compose ps
 
 Access:
 - PostgreSQL: `localhost:5432` (demoktmt / postgres / postgres)
-- pgAdmin: http://localhost:5050 (admin@admin.com / admin)
 
 ### 3. Build & Run Application
 
@@ -134,7 +133,6 @@ Xem chi tiết trong các file sau:
 |------|-------------|
 | **[QUICK_START.md](QUICK_START.md)** | Hướng dẫn quick start và test API |
 | **[USER_MODULE_SOLID_PRINCIPLES.md](USER_MODULE_SOLID_PRINCIPLES.md)** | Chi tiết về SOLID principles áp dụng trong code |
-| **[DOCKER_GUIDE.md](DOCKER_GUIDE.md)** | Hướng dẫn sử dụng Docker Compose |
 
 ## SOLID Principles
 
@@ -232,15 +230,6 @@ CREATE INDEX idx_user_email ON users(email);
 ### Run Application
 ```bash
 ./mvnw spring-boot:run
-```
-
-### Using Makefile (shortcuts)
-```bash
-make help         # Show all commands
-make db-up        # Start database
-make app-build    # Build application
-make app-run      # Run application
-make all          # Start DB + Build + Run
 ```
 
 ## Docker Commands
