@@ -4,7 +4,11 @@ import com.ktmt.demoapplication.content.application.dto.CategoryResponse;
 import com.ktmt.demoapplication.content.application.dto.CreateCategoryRequest;
 import com.ktmt.demoapplication.content.domain.model.Category;
 import com.ktmt.demoapplication.content.domain.repository.ICategoryRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
+@Transactional
 public class CreateCategoryUseCase {
     private final ICategoryRepository iCategoryRepository;
 

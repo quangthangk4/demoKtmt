@@ -4,10 +4,14 @@ import com.ktmt.demoapplication.content.application.dto.CategoryResponse;
 import com.ktmt.demoapplication.content.application.dto.UpdateCategoryRequest;
 import com.ktmt.demoapplication.content.domain.model.Category;
 import com.ktmt.demoapplication.content.domain.repository.ICategoryRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.UUID;
 
+@Service
+@Transactional
 public class UpdateCategoryUseCase {
     private final ICategoryRepository iCategoryRepository;
 

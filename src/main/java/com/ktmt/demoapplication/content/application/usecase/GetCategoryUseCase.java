@@ -3,9 +3,14 @@ package com.ktmt.demoapplication.content.application.usecase;
 import com.ktmt.demoapplication.content.application.dto.CategoryResponse;
 import com.ktmt.demoapplication.content.domain.model.Category;
 import com.ktmt.demoapplication.content.domain.repository.ICategoryRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.UUID;
 
+@Service
+@Transactional(readOnly = true)
 public class GetCategoryUseCase {
     private final ICategoryRepository iCategoryRepository;
 
